@@ -1,0 +1,59 @@
+<html>
+<head>
+	<meta charset="utf-8">
+    <title>地圖</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"/>
+</head>
+<body>
+    <div id="map" style="height: 600px;"></div>
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script>
+		function initMap(){
+			// 設定地圖名稱以及對應的TileLayer
+			var mapLayers = {
+				'中文': L.tileLayer('https://wmts.nlsc.gov.tw/wmts/EMAP98/default/GoogleMapsCompatible/{z}/{y}/{x}', {
+					attribution: '&copy; <a href="https://www.tgos.tw/tgos/web/tgos_home.aspx">TGOS</a>'
+				}),
+				'英文': L.tileLayer('https://wmts.nlsc.gov.tw/wmts/EMAP97/default/GoogleMapsCompatible/{z}/{y}/{x}', {
+					attribution: '&copy; <a href="https://www.tgos.tw/tgos/web/tgos_home.aspx">TGOS</a>'
+				}),
+				'衛星': L.tileLayer('https://wmts.nlsc.gov.tw/wmts/PHOTO_MIX/default/GoogleMapsCompatible/{z}/{y}/{x}', {
+					attribution: '&copy; <a href="https://www.tgos.tw/tgos/web/tgos_home.aspx">TGOS</a>'
+				}),
+				'OSM': L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+					attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+				})
+			};
+			mapLayers['中文'].addTo(map); // 使用中文地圖作為預設
+			L.control.layers(mapLayers).addTo(map); // 加入地圖切換控制項
+		}
+		
+		var map = null;
+		if ("geolocation" in navigator) {
+			navigator.geolocation.getCurrentPosition(function(position) {
+				// 初始化地圖
+				map = L.map('map', {
+					center: [position.coords.latitude, position.coords.longitude], // 中心點座標
+					zoom: 14
+				});
+				initMap(); 
+				L.marker([position.coords.latitude, position.coords.longitude]).addTo(map);
+			}, function(){
+				// 初始化地圖
+				map = L.map('map', {
+					center: [25.0826209, 121.5830209], // 中心點座標
+					zoom: 10
+				});
+				initMap();
+			});
+		} else {
+			// 初始化地圖
+			map = L.map('map', {
+				center: [25.0826209, 121.5830209], // 中心點座標
+				zoom: 10
+			});
+			initMap();
+		} 
+    </script>
+</body>
+</html>
